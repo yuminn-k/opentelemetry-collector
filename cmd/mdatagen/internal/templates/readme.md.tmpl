@@ -33,7 +33,7 @@
 | Unsupported Platforms | {{ stringsJoin .Status.UnsupportedPlatforms ", " }} |
 {{- end }}
 {{- if and (ne $class "cmd") (ne $class "pkg")  }}
-| Distributions | [{{ stringsJoin .Status.SortedDistributions "], [" }}] |
+| Distributions | {{ range $i, $d := .Status.SortedDistributions }}{{ if $i }}, {{ end }}{{ if distroURL $d }}[{{ $d }}]{{ else }}{{ $d }}{{ end }}{{ else }}[]{{ end }} |
 {{- end }}
 {{- if .Status.Warnings }}
 | Warnings      | [{{ stringsJoin .Status.Warnings ", " }}](#warnings) |
@@ -60,7 +60,9 @@
 [Migration Note]: https://github.com/open-telemetry/opentelemetry-collector/blob/main/docs/component-stability.md#deprecation-information
 {{- end }}
 {{- range .Status.SortedDistributions }}
+{{- if distroURL . }}
 [{{.}}]: {{ distroURL . }}
+{{- end }}
 {{- end }}
 {{- if eq $class "connector"}}
 
