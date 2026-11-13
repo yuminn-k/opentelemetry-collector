@@ -39,6 +39,8 @@ type Codeowners struct {
 	Emeritus []string `mapstructure:"emeritus"`
 	// Whether new codeowners are being sought
 	SeekingNew bool `mapstructure:"seeking_new"`
+	// ContributingURL is linked from the "Code Owners" README header
+	ContributingURL string `mapstructure:"contributing_url"`
 }
 
 type Status struct {

@@ -315,6 +315,55 @@ func TestSupportsSignal(t *testing.T) {
 	assert.False(t, md.supportsSignal("logs"))
 }
 
+func TestCodeownersURL(t *testing.T) {
+	const contribGuide = "https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/CONTRIBUTING.md#becoming-a-code-owner"
+	tests := []struct {
+		name            string
+		githubProject   string
+		contributingURL string
+		want            string
+	}{
+		{
+			name:          "core",
+			githubProject: "open-telemetry/opentelemetry-collector",
+			want:          contribGuide,
+		},
+		{
+			name:          "contrib",
+			githubProject: "open-telemetry/opentelemetry-collector-contrib",
+			want:          contribGuide,
+		},
+		{
+			name:          "other project",
+			githubProject: "open-telemetry/opentelemetry-lambda",
+			want:          "",
+		},
+		{
+			name:            "other project with contributing_url",
+			githubProject:   "open-telemetry/opentelemetry-lambda",
+			contributingURL: "https://github.com/open-telemetry/opentelemetry-lambda/blob/main/CONTRIBUTING.md",
+			want:            "https://github.com/open-telemetry/opentelemetry-lambda/blob/main/CONTRIBUTING.md",
+		},
+		{
+			name:            "contributing_url overrides a known project",
+			githubProject:   "open-telemetry/opentelemetry-collector-contrib",
+			contributingURL: "https://example.com/codeowners",
+			want:            "https://example.com/codeowners",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			md := Metadata{
+				GithubProject: tt.githubProject,
+				Status: &Status{
+					Codeowners: &Codeowners{ContributingURL: tt.contributingURL},
+				},
+			}
+			assert.Equal(t, tt.want, md.CodeownersURL())
+		})
+	}
+}
+
 func TestCodeCovID(t *testing.T) {
 	tests := []struct {
 		md   Metadata

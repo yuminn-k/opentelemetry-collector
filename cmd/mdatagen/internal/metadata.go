@@ -105,6 +105,19 @@ func (md Metadata) GetCodeCovComponentID() string {
 	return strings.ReplaceAll(md.Status.Class+"_"+strings.ReplaceAll(md.Type, "_", ""), "/", "_")
 }
 
+// CodeownersURL returns the link target of the "Code Owners" README header,
+// or "" when the header is rendered as plain text.
+func (md Metadata) CodeownersURL() string {
+	if co := md.Status.Codeowners; co != nil && co.ContributingURL != "" {
+		return co.ContributingURL
+	}
+	switch md.GithubProject {
+	case "open-telemetry/opentelemetry-collector", "open-telemetry/opentelemetry-collector-contrib":
+		return "https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/CONTRIBUTING.md#becoming-a-code-owner"
+	}
+	return ""
+}
+
 func (md Metadata) HasEntities() bool {
 	return len(md.Entities) > 0
 }

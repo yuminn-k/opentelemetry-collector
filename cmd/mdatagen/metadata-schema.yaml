@@ -75,6 +75,9 @@ status:
   codeowners:
     active: [string]
     emeritus: [string]
+    # Optional: URL linked from the "Code Owners" header in the generated README, for example a guide on becoming a code owner.
+    # When unset, components in open-telemetry/opentelemetry-collector and open-telemetry/opentelemetry-collector-contrib link to the contrib CONTRIBUTING.md guide; other projects render the header as plain text.
+    contributing_url: string
   # Optional: A list of platforms supported by this component.
   supported_platforms: [string]
 
